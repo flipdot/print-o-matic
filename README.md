@@ -13,7 +13,7 @@ To create only one spendenbescheinigung, use the following command:
 python spende.py "Max Mustermann" "Musterstraße 123" "12345 Musterstadt" "4223" "2020-12-31"
 ```
 
-This will create a spendenbescheinigung for Max Mustermann at the given address and date. The spenden amount translates to 42,23€.
+This will create a spendenbescheinigung for Max Mustermann at the given address and date. The spenden amount translates to 42,23€. _Do not omit the double ticks._
 
 # Batch creation
 For the creation of multiple spendenbescheinigungs, fill in the file `spender.csv` and afterwards use the bundled shell script like so:
