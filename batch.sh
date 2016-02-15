@@ -1,7 +1,7 @@
 #!/bin/bash
 # Converts spender.csv file to filled out spendenbescheinigungs in PDF format
 
-csv_dir=csv
+csv_dir=batch
 config=geldzuwendung
 csv="$csv_dir/$config.csv"
 
