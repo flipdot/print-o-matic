@@ -1,7 +1,14 @@
 #!/bin/bash
 # Converts spender.csv file to filled out spendenbescheinigungs in PDF format
-csv=spender.csv
+
+csv_dir=csv
 config=geldzuwendung
+csv="$csv_dir/$config.csv"
+
+echo $csv
+cat $csv
+
+exit 23
 
 cd "$(dirname "$0")"
 IFS=';' read -ra k <<< "$(head -n1 $csv)"

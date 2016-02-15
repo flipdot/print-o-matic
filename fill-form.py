@@ -32,10 +32,10 @@ style.leading = 12
 
 def usage():
     print("Usage:")
-    print("spende.py CONFIG_FILE [VARIABLE1:VALUE1] [VARIABLE2:VALUE2] ...")
+    print("fill-form.py CONFIG_FILE [VARIABLE1:VALUE1] [VARIABLE2:VALUE2] ...")
     print()
     print("Example:")
-    print("spende.py geldzuwendung name=\"Max Mustermann\" street=\"Musterstraße 123\" city=\"12345 Musterstadt\" date=\"31.12.2020\" amount=\"42.23\"")
+    print("fill-form.py geldzuwendung name=\"Max Mustermann\" street=\"Musterstraße 123\" city=\"12345 Musterstadt\" date=\"31.12.2020\" amount=\"42.23\"")
 
 
 # Download file via http(s) to local filesystem
