@@ -10,11 +10,11 @@ box:
    box1:
        area: [[148, 623],
               [46, 18]]
-       color: [1, 1, 0]
+       color: [1, 1, 1]
    box2:
        area: [[431, 626],
               [113, 18]]
-       color: [1, 1, 0]
+       color: [1, 1, 1]
 
 cross:
     cross1:
