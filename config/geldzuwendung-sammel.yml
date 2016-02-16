@@ -1,0 +1,90 @@
+file:
+    source: https://www.formulare-bfinv.de/printout/034132.pdf 
+    font_family: Helvetica
+    font_size: 10
+    page_size: A4
+    locale: de_DE
+
+# Not needed for original document
+box:
+   box1:
+       area: [[148, 623],
+              [46, 18]]
+       color: [1, 1, 0]
+   box2:
+       area: [[431, 626],
+              [113, 18]]
+       color: [1, 1, 0]
+
+cross:
+    cross1:
+        area: [[59.5, 598.5],
+               [9, 9]]
+        color: [1, 0, 0]
+
+text:
+    # Fixed text
+    aussteller:
+        position: [50, 758]
+        label: >
+            Flipdot e.V.<br />
+            Sickingenstrasse 10<br />
+            34117 Kassel
+    foerderung1:
+        position: [81, 552]
+        dimension: [450, 0]
+        label: >
+            Anregung u. Unterstützg wissenschaftl. und künstler. Arbeiten zu techn. Themen; Vermittlung von technischen
+            Kenntnissen auf Veranstaltungen und durch Veröffentlichungen; Internationalen Austausch
+            über wissenschaftliche und künstlerische Arbeiten sowie internationale Veröffentlichungen.
+    foerderung2:
+        position: [51, 338]
+        dimension: [490, 0]
+        label: >
+            Anregung u. Unterstützg wissenschaftl. und künstler. Arbeiten zu techn. Themen; Vermittlung von technischen
+            Kenntnissen auf Veranstaltungen und durch Veröffentlichungen; Internationalen Austausch
+            über wissen- schaftliche und künstlerische Arbeiten sowie internationale Veröffentlichungen.
+    finanzamt:
+        position: [81, 524.5]
+        label: Kassel 1
+    stnr:
+        position: [252, 524.5]
+        label: 02525051902
+    stnrdate:
+        position: [381, 524.5]
+        label: 04.11.2015
+    zeitraum:
+        position: [189, 510]
+        label: 2011 – 2013
+    location:
+        position: [44, 162]
+        label: Kassel,
+
+    # Dynamic text
+    today:
+        position: [82, 162]
+        function: today
+        arguments:
+            format: '%d. %B %Y'
+    phonetic:
+        position: [203, 626]
+        function: phonetic
+        arguments:
+            value: $amount
+
+    # Variable text
+    name:
+        position: [50, 687]
+        file_name: True
+    street:
+        position: [50, 675]
+    city:
+        position: [50, 663]
+    amount:
+        position: [50, 626]
+        function: currency
+        arguments:
+            value: $amount
+            grouping: True
+    date:
+        position: [434, 626]
