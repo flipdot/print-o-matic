@@ -20,6 +20,7 @@ from reportlab.platypus import *
 from reportlab.lib.styles import getSampleStyleSheet # line breaks
 from reportlab.lib.pagesizes import * # custom document size
 from PyPDF2 import PdfFileWriter, PdfFileReader # merge PDFs
+import collections
 
 config_dir = "config"
 template_dir = "templates"
@@ -77,73 +78,76 @@ def fill_out(name, template_file, config, values):
     c = canvas.Canvas(b)
     c.setFont(config.get("file").get("font_family"), config.get("file").get("font_size"))
 
-    # Print boxes
-    if config.get("box"):
-        for k, v in config.get("box").items():
-            color = v.get("color")
-            area = v.get("area")
+    sorted_pages = collections.OrderedDict(sorted(config.get("pages").items()))
+    for page_name, page in sorted_pages.items():
+        # Print boxes
+        if page.get("box"):
+            for k, v in page.get("box").items():
+                color = v.get("color")
+                area = v.get("area")
 
-            c.setFillColorRGB(color[0], color[1], color[2])
-            c.rect(area[0][0], area[0][1], area[1][0], area[1][1], fill=1, stroke=0)
-            # Default to black
-            c.setFillColorRGB(0, 0, 0)
+                c.setFillColorRGB(color[0], color[1], color[2])
+                c.rect(area[0][0], area[0][1], area[1][0], area[1][1], fill=1, stroke=0)
+                # Default to black
+                c.setFillColorRGB(0, 0, 0)
 
-    # Print crosses / checkmarks
-    if config.get("cross"):
-        for k, v in config.get("cross").items():
-            color = v.get("color")
-            area = v.get("area")
+        # Print crosses / checkmarks
+        if page.get("cross"):
+            for k, v in page.get("cross").items():
+                color = v.get("color")
+                area = v.get("area")
 
-            c.setFillColorRGB(color[0], color[1], color[2])
-            c.line(area[0][0], area[0][1], area[0][0] + area[1][0], area[0][1] + area[1][1])
-            c.line(area[0][0], area[0][1] + area[1][1], area[0][0] + area[1][0], area[0][1])
-            # Default to black
-            c.setFillColorRGB(0, 0, 0)
+                c.setFillColorRGB(color[0], color[1], color[2])
+                c.line(area[0][0], area[0][1], area[0][0] + area[1][0], area[0][1] + area[1][1])
+                c.line(area[0][0], area[0][1] + area[1][1], area[0][0] + area[1][0], area[0][1])
+                # Default to black
+                c.setFillColorRGB(0, 0, 0)
 
-    # Print text
-    yaml_name = []
-    if config.get("text"):
-        for k, v in config.get("text").items():
-            # Get fixed/variable text
-            if values.get(k) is not None:
-                label = values.get(k)
-            elif v.get("label") is not None:
-                label = v.get("label")
-            elif v.get("function") is None:
-                print("No value found for \"%s\".\n" % k)
-                return False
-            if v.get("function") is not None:
-                # Use prefixed functions from within yaml
-                function = eval("doc_%s" % v.get("function"))
-                args = v.get("arguments")
-                for ak in args:
-                    val = args.get(ak)
-                    if isinstance(val, str):
-                        if val[0] is '$':
-                            args[ak] = values.get(args.get(ak)[1:])
-                args["label"] = label
-                label = function(args)
-            position = v.get("position")
-            # DEBUG
-            #print("%s = %s" % (k, label))
+        # Print text
+        yaml_name = []
+        if page.get("text"):
+            for k, v in page.get("text").items():
+                # Get fixed/variable text
+                if values.get(k) is not None:
+                    label = values.get(k)
+                elif v.get("label") is not None:
+                    label = v.get("label")
+                elif v.get("function") is None:
+                    print("No value found for \"%s\".\n" % k)
+                    return False
+                if v.get("function") is not None:
+                    # Use prefixed functions from within yaml
+                    function = eval("doc_%s" % v.get("function"))
+                    args = v.get("arguments")
+                    for ak in args:
+                        val = args.get(ak)
+                        if isinstance(val, str):
+                            if val[0] is '$':
+                                args[ak] = values.get(args.get(ak)[1:])
+                    args["label"] = label
+                    label = function(args)
+                position = v.get("position")
+                # DEBUG
+                #print("%s = %s" % (k, label))
 
-            # Get specified/default dimension
-            if v.get("dimension") is not None:
-                dimension = v.get("dimension")
-            else:
-                dimension = page_size
+                # Get specified/default dimension
+                if v.get("dimension") is not None:
+                    dimension = v.get("dimension")
+                else:
+                    dimension = page_size
 
-            # Simple string miss line breaks
-            #c.drawString(position[0], position[1], label)
+                # Simple string miss line breaks
+                #c.drawString(position[0], position[1], label)
 
-            # Paragraphs have them
-            p = Paragraph(label, style)
-            p.wrapOn(c, dimension[0], dimension[1])
-            p.drawOn(c, position[0], position[1])
+                # Paragraphs have them
+                p = Paragraph(label, style)
+                p.wrapOn(c, dimension[0], dimension[1])
+                p.drawOn(c, position[0], position[1])
 
-            # Add to file name
-            if v.get("file_name"):
-                yaml_name.append(str2fn(label))
+                # Add to file name
+                if v.get("file_name"):
+                    yaml_name.append(str2fn(label))
+        c.showPage()
 
     c.save()
     b.seek(0)
@@ -153,9 +157,11 @@ def fill_out(name, template_file, config, values):
 
     # Merge PDFs
     output = PdfFileWriter()
-    page = template.getPage(0)
-    page.mergePage(addition.getPage(0))
-    output.addPage(page)
+    for i in range(0,template.getNumPages()):
+        page = template.getPage(i)
+        if i < addition.getNumPages():
+            page.mergePage(addition.getPage(i))
+        output.addPage(page)
 
     # File addition
     # TODO: yaml is not parsed deterministically
