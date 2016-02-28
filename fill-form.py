@@ -108,10 +108,16 @@ def fill_out(name, template_file, config, values):
         if page.get("text"):
             for k, v in page.get("text").items():
                 # Get fixed/variable text
+                print("xx")
+                print(v)
+                print("xx")
+                print()
                 if values.get(k) is not None:
                     label = values.get(k)
                 elif v.get("label") is not None:
                     label = v.get("label")
+                elif v.get("optional"):
+                    continue
                 elif v.get("function") is None:
                     print("No value found for \"%s\".\n" % k)
                     return False
@@ -185,6 +191,11 @@ def doc_today(args):
 def doc_currency(args):
     amount = float(args.get("label"))
     return locale.currency(amount, grouping = args.get("grouping"))
+
+
+def doc_sum(args):
+    amounts = [float(args.get(x)) for x in args if x.startswith("amount") and args.get(x) is not None]
+    return str(sum(amounts))
 
 
 def doc_phonetic(args):

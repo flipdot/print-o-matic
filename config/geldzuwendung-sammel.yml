@@ -1,5 +1,5 @@
 file:
-    source: https://www.formulare-bfinv.de/printout/034132.pdf 
+    source: https://www.formulare-bfinv.de/printout/034132.pdf
     font_family: Helvetica
     font_size: 10
     page_size: A4
@@ -91,6 +91,11 @@ pages:
             date:
                 position: [434, 626]
     page2:
+        box:
+           box1:
+               area: [[501, 449],
+                      [26, 13]]
+               color: [1, 1, 1]
         text:
             date1:
                 position: [50, 740]
@@ -101,5 +106,162 @@ pages:
             amount1:
                 position: [430, 740]
 
+            date2:
+                position: [50, 717.318]
+                optional: True
+            type2:
+                position: [180, 717.318]
+                optional: True
+            reject2:
+                position: [310, 717.318]
+                optional: True
+            amount2:
+                position: [430, 717.318]
+                optional: True
 
+            date3:
+                position: [50, 694.636]
+                optional: True
+            type3:
+                position: [180, 694.636]
+                optional: True
+            reject3:
+                position: [310, 694.636]
+                optional: True
+            amount3:
+                position: [430, 694.636]
+                optional: True
 
+            date4:
+                position: [50, 671.955]
+                optional: True
+            type4:
+                position: [180, 671.955]
+                optional: True
+            reject4:
+                position: [310, 671.955]
+                optional: True
+            amount4:
+                position: [430, 671.955]
+                optional: True
+
+            date5:
+                position: [50, 649.273]
+                optional: True
+            type5:
+                position: [180, 649.273]
+                optional: True
+            reject5:
+                position: [310, 649.273]
+                optional: True
+            amount5:
+                position: [430, 649.273]
+                optional: True
+
+            date6:
+                position: [50, 626.591]
+                optional: True
+            type6:
+                position: [180, 626.591]
+                optional: True
+            reject6:
+                position: [310, 626.591]
+                optional: True
+            amount6:
+                position: [430, 626.591]
+                optional: True
+
+            date7:
+                position: [50, 603.909]
+                optional: True
+            type7:
+                position: [180, 603.909]
+                optional: True
+            reject7:
+                position: [310, 603.909]
+                optional: True
+            amount7:
+                position: [430, 603.909]
+                optional: True
+
+            date8:
+                position: [50, 581.227]
+                optional: True
+            type8:
+                position: [180, 581.227]
+                optional: True
+            reject8:
+                position: [310, 581.227]
+                optional: True
+            amount8:
+                position: [430, 581.227]
+                optional: True
+
+            date9:
+                position: [50, 558.546]
+                optional: True
+            type9:
+                position: [180, 558.546]
+                optional: True
+            reject9:
+                position: [310, 558.546]
+                optional: True
+            amount9:
+                position: [430, 558.546]
+                optional: True
+
+            date10:
+                position: [50, 535.864]
+                optional: True
+            type10:
+                position: [180, 535.864]
+                optional: True
+            reject10:
+                position: [310, 535.864]
+                optional: True
+            amount10:
+                position: [430, 535.864]
+                optional: True
+
+            date11:
+                position: [50, 513.182]
+                optional: True
+            type11:
+                position: [180, 513.182]
+                optional: True
+            reject11:
+                position: [310, 513.182]
+                optional: True
+            amount11:
+                position: [430, 513.182]
+                optional: True
+
+            date12:
+                position: [50, 490.5]
+                optional: True
+            type12:
+                position: [180, 490.5]
+                optional: True
+            reject12:
+                position: [310, 490.5]
+                optional: True
+            amount12:
+                position: [430, 490.5]
+                optional: True
+
+            total:
+                position: [433, 449]
+                function: sum
+                arguments:
+                    amount1: $amount1
+                    amount2: $amount2
+                    amount3: $amount3
+                    amount4: $amount4
+                    amount5: $amount5
+                    amount6: $amount6
+                    amount7: $amount7
+                    amount8: $amount8
+                    amount9: $amount9
+                    amount10: $amount10
+                    amount11: $amount11
+                    amount12: $amount12
