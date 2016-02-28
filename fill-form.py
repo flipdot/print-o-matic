@@ -108,10 +108,6 @@ def fill_out(name, template_file, config, values):
         if page.get("text"):
             for k, v in page.get("text").items():
                 # Get fixed/variable text
-                print("xx")
-                print(v)
-                print("xx")
-                print()
                 if values.get(k) is not None:
                     label = values.get(k)
                 elif v.get("label") is not None:
