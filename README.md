@@ -5,7 +5,7 @@ Fill out any PDF you want, automated!
 ## Prerequisites
 Install the needed Python 3 packages:
 ```bash
-pip3 install reportlab PyPDF2
+pip3 install -r requirements.txt
 ```
 
 ## Single document
