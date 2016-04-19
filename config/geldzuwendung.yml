@@ -3,7 +3,7 @@ file:
     font_family: Helvetica
     font_size: 10
     page_size: A4
-    locale: de_DE
+    locale: de_DE.utf-8
 
 # Not needed for original document
 #box:
