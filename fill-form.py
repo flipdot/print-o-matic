@@ -326,7 +326,7 @@ if __name__ == "__main__":
         print("Config file (%s) not found...\n" % config_file)
         usage()
         sys.exit(2)
-    with open(config_file, 'r') as stream:
+    with open(config_file, 'r', encoding='utf-8') as stream:
         config = yaml.load(stream)
 
     # Parse command line arguments
