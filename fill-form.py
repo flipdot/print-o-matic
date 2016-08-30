@@ -14,6 +14,7 @@ import re
 import yaml
 #from ast import literal_eval
 
+from sys import platform
 from io import BytesIO # circumvent reportlabs need to use files
 from reportlab.pdfgen import canvas # generate PDFs
 from reportlab.platypus import *
@@ -67,8 +68,12 @@ def fill_out(name, template_file, config, values):
         page_size = A4
     if config.get("file").get("locale"):
         # Used for localised date and currency
-        locale.setlocale(locale.LC_TIME, config.get("file").get("locale"))
-        locale.setlocale(locale.LC_MONETARY, config.get("file").get("locale"))
+        locale_str = config.get("file").get("locale")
+        if platform == "win32":
+            # Windows fucks up all the locales
+            locale_str = re.sub(r'([a-z]+)_.*', r'\1', locale_str)
+        locale.setlocale(locale.LC_TIME, locale_str)
+        locale.setlocale(locale.LC_MONETARY, locale_str)
     else:
         print("Locale missing... (file.locale)\n")
         return False
