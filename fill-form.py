@@ -289,7 +289,8 @@ def phonetic_int(num):
 
 
 def parse_args(strings):
-    print(strings)
+    # DEBUG
+    #print(strings)
     values = {}
     for value in value_strings:
         m = re.search('([\w\d_-]+)=([^"]+)', value)
@@ -298,8 +299,9 @@ def parse_args(strings):
         if len(m.groups()) < 2:
             return False
         values[m.group(1)] = m.group(2)
-    print(value)
-    print(m.groups())
+    # DEBUG
+    #print(value)
+    #print(m.groups())
     return values
 
 
