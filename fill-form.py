@@ -8,19 +8,17 @@ import requests
 
 import locale
 import datetime
-from dateutil.parser import parse
 
 import re
 import yaml
-#from ast import literal_eval
 
 from sys import platform
-from io import BytesIO # circumvent reportlabs need to use files
-from reportlab.pdfgen import canvas # generate PDFs
-from reportlab.platypus import *
-from reportlab.lib.styles import getSampleStyleSheet # line breaks
-from reportlab.lib.pagesizes import * # custom document size
-from PyPDF2 import PdfFileWriter, PdfFileReader # merge PDFs
+from io import BytesIO  # circumvent reportlabs need to use files
+from reportlab.pdfgen import canvas  # generate PDFs
+from reportlab.platypus import Paragraph
+from reportlab.lib.styles import getSampleStyleSheet  # line breaks
+from reportlab.lib.pagesizes import A4  # custom document size
+from PyPDF2 import PdfFileWriter, PdfFileReader  # merge PDFs
 import collections
 
 config_dir = "config"
@@ -32,12 +30,15 @@ style = getSampleStyleSheet()['Normal']
 style.wordWrap = 'LTR'
 style.leading = 12
 
+
 def usage():
     print("Usage:")
     print("fill-form.py CONFIG_FILE [VARIABLE1:VALUE1] [VARIABLE2:VALUE2] ...")
     print()
     print("Example:")
-    print("fill-form.py geldzuwendung name=\"Max Mustermann\" street=\"Musterstraße 123\" city=\"12345 Musterstadt\" date=\"31.12.2020\" amount=\"42.23\"")
+    print("fill-form.py geldzuwendung name=\"Max Mustermann\"" +
+          "street=\"Musterstraße 123\" city=\"12345 Musterstadt\"" +
+          "date=\"31.12.2020\" amount=\"42.23\"")
 
 
 # Download file via http(s) to local filesystem
@@ -81,7 +82,7 @@ def fill_out(name, template_file, config, values):
     # Prepare overlay document
     b = BytesIO()
     c = canvas.Canvas(b)
-    c.setFont(config.get("file").get("font_family"), config.get("file").get("font_size"))
+    c.setFont("sans-serif", config.get("file").get("font_size"))
 
     sorted_pages = collections.OrderedDict(sorted(config.get("pages").items()))
     for page_name, page in sorted_pages.items():
@@ -92,7 +93,8 @@ def fill_out(name, template_file, config, values):
                 area = v.get("area")
 
                 c.setFillColorRGB(color[0], color[1], color[2])
-                c.rect(area[0][0], area[0][1], area[1][0], area[1][1], fill=1, stroke=0)
+                c.rect(area[0][0], area[0][1], area[1][0], area[1][1],
+                       fill=1, stroke=0)
                 # Default to black
                 c.setFillColorRGB(0, 0, 0)
 
@@ -103,8 +105,10 @@ def fill_out(name, template_file, config, values):
                 area = v.get("area")
 
                 c.setFillColorRGB(color[0], color[1], color[2])
-                c.line(area[0][0], area[0][1], area[0][0] + area[1][0], area[0][1] + area[1][1])
-                c.line(area[0][0], area[0][1] + area[1][1], area[0][0] + area[1][0], area[0][1])
+                c.line(area[0][0], area[0][1], area[0][0] + area[1][0],
+                       area[0][1] + area[1][1])
+                c.line(area[0][0], area[0][1] + area[1][1], area[0][0] +
+                       area[1][0], area[0][1])
                 # Default to black
                 c.setFillColorRGB(0, 0, 0)
 
@@ -135,7 +139,7 @@ def fill_out(name, template_file, config, values):
                     label = function(args)
                 position = v.get("position")
                 # DEBUG
-                #print("%s = %s" % (k, label))
+                # print("%s = %s" % (k, label))
 
                 # Get specified/default dimension
                 if v.get("dimension") is not None:
@@ -144,7 +148,7 @@ def fill_out(name, template_file, config, values):
                     dimension = page_size
 
                 # Simple string miss line breaks
-                #c.drawString(position[0], position[1], label)
+                # c.drawString(position[0], position[1], label)
 
                 # Paragraphs have them
                 p = Paragraph(label, style)
@@ -164,7 +168,7 @@ def fill_out(name, template_file, config, values):
 
     # Merge PDFs
     output = PdfFileWriter()
-    for i in range(0,template.getNumPages()):
+    for i in range(0, template.getNumPages()):
         page = template.getPage(i)
         if i < addition.getNumPages():
             page.mergePage(addition.getPage(i))
@@ -178,7 +182,10 @@ def fill_out(name, template_file, config, values):
     yaml_fn = "-".join(yaml_name)
 
     # Write merged output
-    outfile = open("%s/%s-%s-%s.pdf" % (output_dir, name, yaml_fn, datetime.date.today().strftime('%d-%m-%Y')), 'bw')
+    outfile = open("%s/%s-%s-%s.pdf"
+                   % (output_dir, name, yaml_fn,
+                      datetime.date.today().strftime('%d-%m-%Y')),
+                   'bw')
     output.write(outfile)
     outfile.close()
 
@@ -191,11 +198,14 @@ def doc_today(args):
 
 def doc_currency(args):
     amount = float(args.get("label"))
-    return locale.currency(amount, grouping = args.get("grouping"))
+    return locale.currency(amount, grouping=args.get("grouping"))
 
 
 def doc_sum(args):
-    amounts = [float(args.get(x)) for x in args if x.startswith("amount") and args.get(x) is not None]
+    amounts = [float(args.get(x))
+               for x in args
+               if x.startswith("amount")
+               and args.get(x) is not None]
     return str(sum(amounts))
 
 
@@ -214,29 +224,30 @@ def doc_phonetic(args):
 
 
 def phonetic_int(num):
-    digits = ('null', 'ein', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun')
+    digits = ('null', 'ein', 'zwei', 'drei', 'vier',
+              'fünf', 'sechs', 'sieben', 'acht', 'neun')
     tenners = {
-            2: 'zwanzig',
-            3: 'dreißig',
-            6: 'sechzig',
-            7: 'siebzig',
-            }
+        2: 'zwanzig',
+        3: 'dreißig',
+        6: 'sechzig',
+        7: 'siebzig',
+        }
     positions = ('', 'zig', 'hundert', 'tausend')
     glue = 'und'
     delimiter = '-'
     lookup = {
-            #1: 'eins', # not in currency
-            10: 'zehn',
-            11: 'elf',
-            12: 'zwölf',
-            13: 'dreizehn',
-            14: 'vierzehn',
-            15: 'fünfzehn',
-            16: 'sechzehn',
-            17: 'siebzehn',
-            18: 'achtzehn',
-            19: 'neunzehn',
-            }
+        # 1: 'eins', # not in currency
+        10: 'zehn',
+        11: 'elf',
+        12: 'zwölf',
+        13: 'dreizehn',
+        14: 'vierzehn',
+        15: 'fünfzehn',
+        16: 'sechzehn',
+        17: 'siebzehn',
+        18: 'achtzehn',
+        19: 'neunzehn',
+        }
     s = str(num)
     l = len(s)
     m = l
@@ -256,7 +267,7 @@ def phonetic_int(num):
                     ret += delimiter
                 ret += digits[d]
                 ret += positions[l-1]
-            l-=1
+            l -= 1
         # Lookups
         n21 = int("%s%s" % (s[-2], s[-1]))
         if n21 in lookup:
@@ -280,7 +291,7 @@ def phonetic_int(num):
                 ret2 += digits[n1]
         if ret is "":
             ret += ret2
-        elif  ret2 is "":
+        elif ret2 is "":
             ret = ret
         else:
             ret += delimiter
@@ -290,7 +301,7 @@ def phonetic_int(num):
 
 def parse_args(strings):
     # DEBUG
-    #print(strings)
+    # print(strings)
     values = {}
     for value in value_strings:
         m = re.search('([\w\d_-]+)=([^"]+)', value)
@@ -300,8 +311,8 @@ def parse_args(strings):
             return False
         values[m.group(1)] = m.group(2)
     # DEBUG
-    #print(value)
-    #print(m.groups())
+    # print(value)
+    # print(m.groups())
     return values
 
 
@@ -347,6 +358,7 @@ if __name__ == "__main__":
     create_dir(output_dir)
 
     if not fill_out(config_name, template_file, config, values):
-        print("Error filling out document. Please make sure you have all the required parameters...\n")
+        print("Error filling out document. Please make sure you have all the" +
+              "required parameters...\n")
         usage()
         sys.exit(5)
