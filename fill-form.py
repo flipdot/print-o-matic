@@ -83,7 +83,7 @@ def fill_out(name, template_file, config, values):
     # Prepare overlay document
     b = BytesIO()
     c = canvas.Canvas(b)
-    c.setFont("Helvetica", config.get("file").get("font_size"))
+    c.setFont(config.get("file").get("font_family"), config.get("file").get("font_size"))
 
     sorted_pages = collections.OrderedDict(sorted(config.get("pages").items()))
     for page_name, page in sorted_pages.items():
