@@ -20,6 +20,7 @@ from reportlab.lib.styles import getSampleStyleSheet  # line breaks
 from reportlab.lib.pagesizes import A4  # custom document size
 from PyPDF2 import PdfFileWriter, PdfFileReader  # merge PDFs
 import collections
+from babel.numbers import format_currency
 
 config_dir = "config"
 template_dir = "templates"
@@ -82,7 +83,7 @@ def fill_out(name, template_file, config, values):
     # Prepare overlay document
     b = BytesIO()
     c = canvas.Canvas(b)
-    c.setFont("sans-serif", config.get("file").get("font_size"))
+    c.setFont("Helvetica", config.get("file").get("font_size"))
 
     sorted_pages = collections.OrderedDict(sorted(config.get("pages").items()))
     for page_name, page in sorted_pages.items():
@@ -198,7 +199,7 @@ def doc_today(args):
 
 def doc_currency(args):
     amount = float(args.get("label"))
-    return locale.currency(amount, grouping=args.get("grouping"))
+    return format_currency(amount, "EUR")
 
 
 def doc_sum(args):
@@ -217,7 +218,7 @@ def doc_phonetic(args):
     else:
         ret = phonetic_int(int(num))
         ret += "-euro-"
-        fp = int((round(num, 2) - int(num)) * 100)
+        fp = int(100 * num) % 100
         ret += phonetic_int(fp)
         ret += "-cent"
     return ret
