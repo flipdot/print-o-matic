@@ -339,7 +339,7 @@ if __name__ == "__main__":
         usage()
         sys.exit(2)
     with open(config_file, 'r', encoding='utf-8') as stream:
-        config = yaml.load(stream)
+        config = yaml.safe_load(stream)
 
     # Parse command line arguments
     values = parse_args(value_strings)
