@@ -2,5 +2,5 @@ reportlab==3.3.0
 PyPDF2==1.25.1
 PyYAML>=4.2b1
 python-dateutil==2.5.0
-requests==2.18.4
+requests>=2.20.0
 babel==2.5.3
